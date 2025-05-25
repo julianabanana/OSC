@@ -27,7 +27,7 @@ int simple_init(void)
 
 /* This function is called when the module is removed. */
 void simple_exit(void) {
-    unsigned long c = ged(3300,24);
+    unsigned long c = gcd(3300,24);
     printk(KERN_INFO "Removing Module\n");
     printk(KERN_INFO "NCD: %lu\n", c);
     printk(KERN_INFO "Jiffies salida: %lu\n", jiffies);
