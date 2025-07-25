@@ -1,0 +1,67 @@
+#!/bin/bash
+# Program to output a system information page
+
+CURRENT_TIME=$(date)
+SYSTEM_UPTIME=$(uptime)
+DISK_SPACE=$(df -h)
+MEM_USAGE=$(free -h)
+RAM_DETAILS=$(cat /proc/meminfo | grep -E 'MemTotal|MemFree|MemAvailable|Buffers|Cached|SwapTotal|SwapFree')
+HOME_USER=$(find /home -type f | wc -l)
+
+report_uptime () {
+    cat <<- _EOF_
+    <h2>System Uptime</h2>
+    <pre>$SYSTEM_UPTIME</pre>
+
+_EOF_
+    return
+}
+
+report_disk_space () {
+    cat <<- _EOF_
+    <h2>Disk Space Utilization</h2>
+    <pre>$DISK_SPACE</pre>
+_EOF_
+    return
+}
+
+report_home_space () {
+    cat <<- _EOF_
+    <h2>Home Space Files</h2>
+    <pre>$HOME_USER</pre>
+    <h3>Home Space Files by User</h3>
+_EOF_
+    for user in $(ls /home); do
+        cat <<- _EOF_
+    <pre>Usuario $user: $count archivos</pre>
+
+_EOF_
+    done
+    return
+}
+
+report_ram () {
+    cat <<- _EOF_
+    <h2>RAM Usage</h2>
+    <pre>$MEM_USAGE</pre>
+    <h3>RAM details</h3>
+    <pre>$RAM_DETAILS</pre>
+_EOF_
+    return
+}
+
+cat << _EOF_
+<html>
+    <head>
+        <title>System Information Report</title>
+    </head>
+    <body>
+        <h1>System Information Report $HOSTNAME</h1>
+        <p>Generado $CURRENT_TIME, by $USER.</p>
+        $(report_uptime)
+        $(report_disk_space)
+        $(report_home_space)
+        $(report_ram)
+    </body>
+</html>
+_EOF_
